@@ -80,18 +80,30 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
       # ---------------------------------------------------------------------------------------------------------------------
       #  Kubernetes 관련 설정
       # ---------------------------------------------------------------------------------------------------------------------
-      
-      - name: Update Deployment YAML
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_REPOSITORY: postapp
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          sed -i "s|image: .*|image: $DOCKER_HUB_USERNAME/$DOCKER_HUB_REPOSITORY:${IMAGE_TAG}|" k8s/postapp-deployment.yaml
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ secrets.GITOPS_REPO }}   # 외부 Git 저장소의 이름 (<소유자>/<저장소명>) : kimsinok0714/gitops-repo
+          token: ${{ secrets.GITHUB_TOKEN }}       # 인증에 사용할 GitHub 토큰. secrets.GITHUB_TOKEN은 기본 제공되며, 푸시 권한도 포함되어 있습니다. 
+          path: gitops-repo                        # 저장소를 체크아웃할 로컬 경로, gitops-repo/ 라는 하위 폴더에 복제한다.
 
-      - name: Commit and push if there are changes
+      #  yq 유틸리티 : GitHub Actions 내에서 values.yaml 등의 YAML 파일을 자동으로 수정하기 위해 사용
+      - name: Install yq for YAML editing
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'github-actions@github.com'
-          git add k8s/postapp-deployment.yaml gradlew
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update image tag to ${{ github.sha }}" && git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:$(echo ${{ github.ref }} | sed 's/refs\/heads\///'))
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+
+      - name: Update image tag in values.yaml
+        run: |
+          cd gitops-repo/$GITOPS_SERVICE_PATH   #  GitHub Actions 워크플로우에서 GitOps 저장소 내의 특정 마이크로서비스 디렉토리 경로, member-service
+          yq -i '.app.image = "${{ secrets.ECR_REGISTRY }}/member-service:${{ env.IMAGE_TAG }}"' values.yaml
+          
+      - name: Commit and push changes to GitOps repo
+        run: |
+          cd gitops-repo
+          git config user.name "github-actions"   # Git 사용자 이름(user.name)과 이메일(user.email)은 원하시는 어떤 값으로든 설정
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Update image tag to $IMAGE_TAG"
+          git push origin main
+      
