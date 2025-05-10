@@ -87,7 +87,7 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
         uses: actions/checkout@v3
         with:
           repository: ${{ secrets.GITOPS_REPO }}   # 외부 Git 저장소의 이름 (<소유자>/<저장소명>) : kimsinok0714/gitops-repo
-          token: ${{ secrets.GITHUB_TOKEN }}       # 인증에 사용할 GitHub 토큰. secrets.GITHUB_TOKEN은 기본 제공되며, 푸시 권한도 포함되어 있습니다. 
+          token: ${{ secrets.PAT }}                # 인증에 사용할 GitHub 토큰. 푸시 권한도 포함되어 있습니다. 
           path: gitops-repo                        # 저장소를 체크아웃할 로컬 경로, gitops-repo/ 라는 하위 폴더에 복제한다.
 
       #  yq 유틸리티 : GitHub Actions 내에서 values.yaml 등의 YAML 파일을 자동으로 수정하기 위해 사용
