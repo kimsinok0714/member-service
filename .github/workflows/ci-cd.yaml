@@ -57,10 +57,9 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
       # Amazon ECR(Elastic Container Registry) 로그인
       # aws ecr get-login-password 명령어를 사용하여 Docker 클라이언트를 인증하며, Docker가 ECR과 통신할 수 있게 해줍니다.
       - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        # run: |
-        #  aws ecr get-login-password | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+        id: login-ecr       
+        run: |
+          aws ecr get-login-password | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
 
       # Docker 이미지를 빌드하고 ECR에 푸시합니다.
