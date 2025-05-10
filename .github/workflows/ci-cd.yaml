@@ -11,6 +11,10 @@ on:
     branches:
       - main
 
+env:
+  GITOPS_PATH: dev/member-service
+  
+
 jobs:      # 여러개의 작업을 정의할 수 있다.
   build:   # build 작업 정의
     runs-on: ubuntu-22.04    # GitHub Actions 워크플로우가 실행 될 가상 환경(Runner)에서 사용할 운영체제
@@ -94,7 +98,7 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
 
       - name: Update image tag in values.yaml
         run: |
-          cd gitops-repo/$GITOPS_SERVICE_PATH   #  GitHub Actions 워크플로우에서 GitOps 저장소 내의 특정 마이크로서비스 디렉토리 경로, member-service
+          cd gitops-repo/$GITOPS_PATH   #  GitHub Actions 워크플로우에서 GitOps 저장소 내의 특정 마이크로서비스 디렉토리 경로, member-service
           yq -i '.app.image = "${{ secrets.ECR_REGISTRY }}/member-service:${{ env.IMAGE_TAG }}"' values.yaml
           
       - name: Commit and push changes to GitOps repo
