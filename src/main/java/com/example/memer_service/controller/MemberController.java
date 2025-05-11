@@ -37,20 +37,30 @@ public class MemberController  {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+   //  @PreAuthorize("hasRole('ADMIN')")
+   //  @GetMapping("/members/{id}")
+   //  public ResponseEntity<MemberDto> view(@AuthenticationPrincipal Jwt jwt, @PathVariable(name = "id") Long id) {
+
+   //      String email = jwt.getClaimAsString("email");
+
+   //      log.info("----------------------------------------- email : {}", email);
+
+   //      MemberDto memberDto = memberService.findMember(id);
+
+   //      return new ResponseEntity<>(memberDto, HttpStatus.OK);
+
+   // }
+
+
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberDto> view(@AuthenticationPrincipal Jwt jwt, @PathVariable(name = "id") Long id) {
-
-        String email = jwt.getClaimAsString("email");
-
-        log.info("----------------------------------------- email : {}", email);
+    public ResponseEntity<MemberDto> view( @PathVariable(name = "id") Long id) {
 
         MemberDto memberDto = memberService.findMember(id);
 
         return new ResponseEntity<>(memberDto, HttpStatus.OK);
 
    }
-
+    
 
    @GetMapping("/members")
    public ResponseEntity<List<MemberDto>> list() {
