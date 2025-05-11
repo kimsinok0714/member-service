@@ -1,5 +1,5 @@
-package com.example.memer_service.config;
+// package com.example.memer_service.config;
 
-public @interface Configuratiron {
+// public @interface Configuratiron {
 
-}
+// }
