@@ -90,7 +90,7 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
           token: ${{ secrets.PAT }}                # 인증에 사용할 GitHub 토큰. 푸시 권한도 포함되어 있습니다. 
           path: gitops-repo                        # 저장소를 체크아웃할 로컬 경로, gitops-repo/ 라는 하위 폴더에 복제한다.
 
-      #  yq 유틸리티 : GitHub Actions 내에서 values.yaml 등의 YAML 파일을 자동으로 수정하기 위해 사용
+      #  yq 유틸리티 :  YAML 파일을 읽고 쓰고 수정하기 위한 커맨드라인 유틸리티
       - name: Install yq for YAML editing
         run: |
           sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
