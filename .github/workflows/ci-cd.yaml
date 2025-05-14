@@ -10,10 +10,10 @@ on:
   pull_request:
     branches:
       - main
+      
 # 환경변수
 env:
-  GITOPS_PATH: dev/member-service
-  
+  GITOPS_PATH: dev/member-service  
 
 jobs:      # 여러개의 작업을 정의할 수 있다.
   build:   # build 작업 정의
