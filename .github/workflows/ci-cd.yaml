@@ -10,7 +10,7 @@ on:
   pull_request:
     branches:
       - main
-
+# 환경변수
 env:
   GITOPS_PATH: dev/member-service
   
